@@ -40,26 +40,26 @@ var ToDo = [
         userid: 'A2',
         text: 'creating demos',
         done: false,
-        targetDate: '11/17/2017'
+        targetDate: '17-NOV-2017'
     },
     {
         id: 'ToDo2',
-        userid: 'A4',
+        userid: 'A2',
         text: 'presenting demos',
         done: false,
-        targetDate: '11/17/2017'
+        targetDate: '19-NOV-2017'
     }, {
         id: 'ToDo3',
         userid: 'A2',
         text: 'creating demos',
         done: true,
-        targetDate: '11/18/2017'
+        targetDate: '18-NOV-2017'
     }, {
         id: 'ToDo4',
         userid: 'A1',
         text: 'preparing demos',
         done: true,
-        targetDate: '11/17/2017'
+        targetDate: '17-NOV-2017'
     }
 ];
 
@@ -118,9 +118,10 @@ exports.getActiveTodo = function (req, res) {
            // ActiveTodoUsers.push({ userDt: user[k] });
             for (let T in ToDo) {
                 if (ToDo[T].userid === user[k].id) {
-                    var dt = new Date(ToDo[T]);
-                    if(today >= dt)
-                    ActiveTodoUsers.push({ toDoDt: ToDo[T],userDt: user[k] });
+                    var dt = new Date(ToDo[T].targetDate);
+                    if(today < dt ){
+                        ActiveTodoUsers.push({ toDoDt: ToDo[T],userDt: user[k] });
+                    }
                 }
             }
         }
