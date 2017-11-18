@@ -67,20 +67,66 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User');
 
 exports.getDetails = function (req, res) {
-    var id = req.param.id;
-    console.log(id, ": id")
-    console.log("inside api")
-    console.log("Here we can write functions for getting reqiured Details")
-    for(let k in user){
+    var id = req.params.id;
+    var UserDetails = [];
+    for (let k in user) {
         //console.log(user[k] ,": user Details");
+        if (user[k].id === id) {
+            UserDetails.push({ userDt: user[k] });
+            for (let T in ToDo) {
+                if (ToDo[T].userid === id) {
+                    UserDetails.push({ toDoDt: ToDo[T] });
+                }
+            }
         }
     }
+    res.json(UserDetails);
+}
 
-    //if we have mongo DB connection
-    // User.find({}, function (err, task) {
-    //     console.log(res, ":::res")
-    //     if (err)
-    //         res.send(err);
-    //     res.json(task);
-    // });
-//};
+
+exports.getToDo = function (req, res) {
+    var id = req.params.ToDoid;
+    for (let k in ToDo) {
+        if (ToDo[k].id === id) {
+            res.json(ToDo[k])
+        }
+    }
+}
+
+exports.getActiveUser = function (req, res) {
+    var ActiveUsers = [];
+    for (let k in user) {
+        //console.log(user[k] ,": user Details");
+        if (user[k].isActive === true) {
+            ActiveUsers.push({ userDt: user[k] });
+            for (let T in ToDo) {
+                if (ToDo[T].userid === user[k].id) {
+                    ActiveUsers.push({ toDoDt: ToDo[T] });
+                }
+            }
+        }
+    }
+    res.json(ActiveUsers);
+}
+
+exports.getActiveTodo = function (req, res) {
+    var id = req.params.id;
+    var today = new Date();
+    var ActiveTodoUsers = [];
+    for (let k in user) {
+         if (user[k].id === id && user[k].isActive === true) {
+           // ActiveTodoUsers.push({ userDt: user[k] });
+            for (let T in ToDo) {
+                if (ToDo[T].userid === user[k].id) {
+                    var dt = new Date(ToDo[T]);
+                    if(today >= dt)
+                    ActiveTodoUsers.push({ toDoDt: ToDo[T],userDt: user[k] });
+                }
+            }
+        }
+    }
+    res.json(ActiveTodoUsers);
+}
+
+
+    
